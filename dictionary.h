@@ -80,7 +80,7 @@ public:
      * @return void
     */
     Dictionary(_key key, _value value, Pair* next = NULL){
-        front = new Pair(key, value, next);
+        front = rear = new Pair(key, value, next);
     }
 
     /**
@@ -90,7 +90,7 @@ public:
      * @param Dictionary
      * @return void
     */
-    Dictionary(Dictionary& __dict){front = __dict.getHead();}
+    Dictionary(Dictionary& __dict){front = rear = __dict.getHead();}
 
     /**
      * @name Destructor
