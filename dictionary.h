@@ -1,3 +1,14 @@
+/*     
+    An implementation of Dictionary in C++.
+    #ver=1.0.0
+
+      Created By: Aniket Biswas
+      Github: https://github.com/thesmartaniket
+      LinkedIn: https://www.linkedin.com/in/thesmartaniket/
+
+    See Example.cpp for more.
+*/
+
 #ifndef Dictionary_hpp
 #define Dictionary_hpp
 
@@ -38,6 +49,7 @@ private:
 
         bool isMyKey(_key& key){return this->key == key;}
 
+        //[NOT IMPLEMENTED YET]
         // Pair* operator ++ (int){return this->next;}
         // bool operator != (Pair __another){return this->next != __another;}
     };
@@ -125,11 +137,11 @@ public:
     /**
      * @name remove()
      * @brief
-     * Removes the first key matching Pair from the list if it presents.
+     * Removes the first ocuurence of key-value Pair from the list if it presents.
      * @param key
-     * @return void
+     * @return value*
     */
-    void remove(_key key);
+    _value* remove(_key key);
 
     /**
      * @name getKeys()
@@ -218,14 +230,18 @@ void Dictionary<_key, _value>::append(_key key, _value value){
 }
 
 template <typename _key, typename _value> 
-void Dictionary<_key, _value>::remove(_key key){
+_value* Dictionary<_key, _value>::remove(_key key){
     if(front != NULL){
+        _value __x;
+
         if(front->key == key){
             Pair* __tmp = front;
             front = front->next;
 
+            __x = __tmp->value;
+
             delete __tmp;
-            return;
+            return new _value(__x);
         }
 
         Pair *__c_cpy = front;
@@ -240,12 +256,26 @@ void Dictionary<_key, _value>::remove(_key key){
         }
 
         if(__c_cpy){
+            if(__c_cpy == rear){
+                Pair* __tmp = front;
+                while(__tmp->next->next != NULL){
+                    __tmp = __tmp->next;
+                }
+
+                rear = __tmp;
+            }
+
             Pair* __tmp = __c_cpy;
             __p_cpy->next = __c_cpy->next;
 
+            __x = __tmp->value;
+
             delete __tmp;
+            return new _value(__x);
         }
     }
+
+    return NULL;
 }
 
 template <typename _key, typename _value> 
@@ -264,7 +294,8 @@ std::vector<_key> Dictionary<_key, _value>::getKeys(){
     return __tmp_v;
 }
 
-template <typename _key, typename _value> void Dictionary<_key, _value>::clear(){
+template <typename _key, typename _value> 
+void Dictionary<_key, _value>::clear(){
     while(front != NULL){
         Pair* __tmp = front;
         front = front->next;
