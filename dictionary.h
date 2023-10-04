@@ -1,6 +1,6 @@
 /*     
     An implementation of Dictionary in C++.
-    #ver=1.0.0
+    #ver=1.1.0
 
       Created By: Aniket Biswas
       Github: https://github.com/thesmartaniket
@@ -14,6 +14,7 @@
 
 #include <iostream>
 #include <vector>
+#include <exception>
 
 /**
  * @name Dictionary
@@ -53,6 +54,8 @@ private:
         // Pair* operator ++ (int){return this->next;}
         // bool operator != (Pair __another){return this->next != __another;}
     };
+
+    std::vector<std::string> split_str(std::string& , const char );
 
     /**
      * Pointers for linked list 
@@ -113,6 +116,29 @@ public:
         return cout;
     }
 
+    friend std::istream& operator >> (std::istream& cin, Dictionary& __dict){
+        std::string __f_str;
+        std::string __str;
+
+        std::getline(cin, __str);
+
+        if(__str[0] != '{' && __str[__str.length() - 1] != '}'){
+            __f_str.push_back('{');
+            __f_str.append(__str);
+            __f_str.push_back('}');
+        }else{
+            __f_str = __str;
+        }
+
+        __dict += __f_str;
+
+        return cin;
+    }
+
+    void operator += (std::string );
+    void operator += (const char* );
+    void operator = (const char* );
+    _value* operator -= (_key );
     _value& operator [](_key key);
 
     /**
@@ -301,6 +327,69 @@ void Dictionary<_key, _value>::clear(){
         front = front->next;
         delete __tmp;
     }
+}
+
+template <typename _key, typename _value>
+std::vector<std::string>  Dictionary<_key, _value>::split_str(std::string& __str, const char __split_chr){
+    std::vector<std::string> _vec_str;
+    std::string _split_str;
+    bool __flag_split_chr_found = false;
+
+    for(auto ch = __str.begin(); ch != __str.end(); ch++){
+        if(*ch != ' '){
+            if(*ch == '{'){
+                continue;
+            }else if(*ch == __split_chr){
+                _vec_str.push_back(_split_str);
+                _split_str.clear();
+                __flag_split_chr_found = true;
+            }else if(*ch == '}'){
+                _vec_str.push_back(_split_str);
+            }else{
+                _split_str.push_back(*ch);
+            }
+        } 
+    }
+
+    if(!__flag_split_chr_found){
+        throw std::invalid_argument("Incomplete/Invalid dictionary: All dictionary must have ':' to separate the key, value pair.");
+        exit(-1);
+    }
+
+    return _vec_str;
+}
+
+template <typename _key, typename _value>
+void Dictionary<_key, _value>::operator += (std::string __str){
+    if(__str[0] == '{' && __str[__str.length() - 1] == '}'){
+        auto vec = split_str(__str, ':');
+
+        append(vec[0], vec[1]);
+    }else{
+        throw std::invalid_argument("Incomplete/Invalid dictionary: All dictionary must start with '{' and end with '}'.");
+        exit(-1);
+    }
+}
+
+template <typename _key, typename _value>
+void Dictionary<_key, _value>::operator = (const char* __str){
+    if(__str[0] == '{' && __str[1] == '}'){
+        this->clear();
+        return;
+    }
+
+    throw std::invalid_argument("Incomplete/Invalid dictionary: Wrong assignment'.");
+    exit(-1);
+}
+
+template <typename _key, typename _value>
+void Dictionary<_key, _value>::operator += (const char* __str){
+    *this += std::string(__str); 
+}
+
+template <typename _key, typename _value>
+_value* Dictionary<_key, _value>::operator -= (_key __key){
+    return remove(__key);
 }
 
 #endif

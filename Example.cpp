@@ -1,7 +1,8 @@
 #include <iostream>
-#include <dictionary.h>
+#include "dictionary.h"
 
 int main(){
+    //features in ver: 1.0.0
     //name to phone-number dictionary
     Dictionary<std::string, long> contacts;
 
@@ -44,6 +45,36 @@ int main(){
 
     //clears whole Dictionary
     contacts.clear();
+
+    //new features in ver: 1.1.0
+    //using this features requires both key & value to be of std::string
+    std::cout<<"\nNew in 1.1.0\n";
+
+    //{name:id}
+    Dictionary<std::string, std::string> data;
+
+    //assign datas directly [appends to exisiting dictionary]
+    data += "{Jake : 04}";
+    std::string myData = "{Luke:75}"; //space is optional
+
+    data += myData;
+
+    std::cout<<data<<std::endl;
+
+    //takes datas directly through streams
+    //ways to enter :-
+    //              1. {Linda : 81}
+    //              2. Linda : 81
+    std::cin>>data;
+
+    //remove any value with key using -= operator
+    //val stores the removed value
+    auto val = data -= "Jake";
+
+    std::cout<<data<<" "<<*val<<std::endl;
+    
+    //clearing all data using {}
+    data = "{}";
 
     return 0;
 }

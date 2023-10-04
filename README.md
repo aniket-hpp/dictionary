@@ -15,5 +15,10 @@ Simply copy the `.h` file in your compiler's include path.
 
 1. `std::vector`
 
+# Uses-
+1. Declaration-
+- `Dictionary<key-type, value-type> <variable-name>`</br>
+    Here is an example for 
+
 # Version
 >1.0.0
